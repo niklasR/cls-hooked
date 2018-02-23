@@ -313,7 +313,7 @@ function createNamespace(name) {
       //   }
       // }
       if(namespace.active) {
-        namespace._contexts.set(asyncId, namespace.active);
+        namespace._contexts.set(namespace.active.id, namespace.active);
 
         if (DEBUG_CLS_HOOKED) {
           const indentStr = ' '.repeat(namespace._indent < 0 ? 0 : namespace._indent);
@@ -361,7 +361,7 @@ function createNamespace(name) {
       */
 
       //HACK to work with promises until they are fixed in node > 8.1.1
-      context = namespace._contexts.get(asyncId) || namespace._contexts.get(currentUid);
+      context = namespace._contexts.get(currentUid);
 
       if (context) {
         if (DEBUG_CLS_HOOKED) {
@@ -422,6 +422,7 @@ function createNamespace(name) {
       }
 
       namespace._contexts.delete(asyncId);
+      if (namespace.active && namespace.active.id === asyncId) namespace.active = null;
     }
   });
 
